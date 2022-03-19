@@ -183,6 +183,21 @@ function createTaskRow(index, loadTime, savedTasks) {
     return rowDiv;
 }
 
+// reset all localStorage data for this program's datakey, and clear all tasks
+function resetSavedTaskInfo() {
+    // reset local storage data for task key
+    datastore.update(TASK_SAVE_KEY, oldData => {
+        if (!oldData) return {};
+        for (let index in oldData) delete oldData[index];
+        return oldData
+    });
+
+    // update task rows with no text
+    for (let set of rowTable) {
+        set[1].textarea.text("");
+    }
+}
+
 // callback for save button click event
 function onSaveButtonClicked(event) {
     const rowData = rowTable.get(event.target);
@@ -238,7 +253,7 @@ function init() {
 
     // load old task data
     const savedTasks = datastore.get(TASK_SAVE_KEY, {});
-    
+
     // generate the task rows
     forInterval(0, 23, 1, 50, index => {
         const rowDiv = createTaskRow(index, loadTime, savedTasks);
