@@ -1,0 +1,90 @@
+? @document-start
+=====================
+| ABOUT ANCHOR TAGS |
+==================================================================================================================================
+
+? @author:                 William J. Horn
+? @document-name:          anchor-tags.txt
+? @document-created:       02/22/2022
+? @document-modified:      02/26/2022
+
+==================================================================================================================================
+
+! This is the central updated version
+
+? @document-info
+=========================
+| What are Anchor Tags? |
+==================================================================================================================================
+
+Anchor tags are denoted by using the syntax '@anchor`. They are not a plugin, nor do they offer any additional technology to a 
+project. These tags are simply just categorical comments that you can leave throughout your program files. 
+
+The primary purpose of these tags are to take advantage of your text editor's search function. Using the search function,
+you can search for a specific tag and quickly locate where some relevant code is within your project. This works best if your 
+text editor's search function also allows you to search across multiple files, such as VSCode does. Doing this allows you to 
+quickly list all possible points of interest when searching for an anchor tag.
+
+There are two types of anchors: inline anchors, and block anchors. Inline anchors look wherever that tag is written in a 
+document on a single line, whereas block anchors do the same thing except it is implied that the tag affects an entire block of 
+code. Block anchors will also have an ending tag that matches the context of the starting tag.
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+* Anchor Tags 
+The typical search tags are as follows, but depending on the purpose of the document there may be more or less:
+
+    -- inline anchors --
+
+    @author                                 ? Locate author(s) of the document
+    @anchor-help                            ? Locate more information about an anchor tag by searching for it with this tag
+    @document-start                         ? Locate the top of the document
+    @document-end                           ? Locate the bottom of the document
+    @document-name                          ? Locate the file name of the document
+    @document-created                       ? Locate the date the document was created on
+    @document-modified                      ? Locate the date the document was last changed
+    @document-version                       ? Locate the version of the document according to the author(s)
+    @document-info                          ? Locate verbose information about the document
+    @document-api                           ? Locate the API if the document is a library
+    @document-changelog                     ? Locate information about the changelog
+    @document-todo                          ? Locate the document to-do list
+    @program-init                           ? Locate beginning of the initial setup phase of the program
+    @program-main                           ? Locate where the main body of your program begins
+    @marker:"comment"                       ? Points to any arbitrary marker spot in a document
+    @<file-type>:"comment"                  ? (Similar to @marker) Points to a marker specific to a given file type. (ex. @ html:"something") 
+    @changelog-date:xx/xx/xxxx              ? Points to a specific change log tab for a given date
+    @changelog-version:x.y.z                ? Points to a specific version category where changelog records are sorted by date 
+    @changelog-records                      ? Points to the change log repository for a document
+
+    -- block anchors --
+
+    @changelog-record:log[id]               ? Target specifically change logs within the changelog file
+    @changelog-record:start[id]             ? Target all starting change record code blocks within a program file
+    @changelog-record:end[<start id>]       ? Target all ending instances of a change record block within a program file
+    @debug-on:start:"comment"               ? Points to an active debug feature in the program file 
+    @debug-on:end:<start comment>           ? Points to ending instance of an active debug block
+    @debug-off:start:"comment"              ? Points to an inactive debug feature in the program file
+    @debug-off:end:<start comment>          ? Points to ending instance of an inactive debug block
+    @bug:start:"comment"                    ? Points to any marker left where a bug exists
+    @bug:end:<start comment>                ? Points to ending instance of bug tag 
+
+* Lists 
+For short-hand, you can list all instances where these anchor tags occur just by typing '@' and the first word in the tag.
+This provides a list-like structure for quick access of all data under that category name. For example:
+
+    @ document                              <-- lists all information about program headings for all files 
+    @ changelog-record:start                <-- lists all starting instances of a recorded changelog within a program file 
+    @ changelog-record:log                  <-- lists ONLY the changelog records held within the changelog file 
+    @ changelog-record:end                  <-- lists all ending instances of a recorded changelog within a program file 
+    @ bug:start                             <-- lists all instances of where a documented bug STARTS in a program file 
+    @ bug:end                               <-- lists all instances of where a bug ENDS in a program file 
+    @ debug-on:start                        <-- lists all instances of where some ACTIVE debug code STARTS in a program file
+    @ debug-on:end                          <-- lists all instances of where some ACTIVE debug code ENDS in your program file 
+    @ debug-off:start                       <-- lists all instances of where some INACTIVE debug code STARTS in a program file
+    @ debug-off:end                         <-- lists all instances of where some INACTIVE debug code ENDS in your program file 
+
+
+==================================================================================================================================
+
+~Will
+? @document-end
