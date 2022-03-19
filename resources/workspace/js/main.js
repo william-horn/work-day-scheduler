@@ -63,7 +63,7 @@ const rowTable = new Map();
 const globalTimeEvent = new PseudoEvent();
 
 // datastore namespace
-const TASK_SAVE_KEY = "saved-tasks";
+const taskSaveKey = "saved-tasks";
 
 /* ----------------- */
 /* Utility Functions */
@@ -186,7 +186,7 @@ function createTaskRow(index, loadTime, savedTasks) {
 // reset all localStorage data for this program's datakey, and clear all tasks
 function resetSavedTaskInfo() {
     // reset local storage data for task key
-    datastore.update(TASK_SAVE_KEY, oldData => {
+    datastore.update(taskSaveKey, oldData => {
         if (!oldData) return {};
         for (let index in oldData) delete oldData[index];
         return oldData
@@ -204,7 +204,7 @@ function onSaveButtonClicked(event) {
 
     // if the save button is clicked, AND the row is not in the 'before' time state, then...
     if (rowData && rowData.currentTimeState != "before") {
-        datastore.update(TASK_SAVE_KEY, oldData => {
+        datastore.update(taskSaveKey, oldData => {
             oldData = oldData || {};
             oldData[rowData.rowIndex] = rowData.getTaskInfo();
             return oldData
@@ -252,7 +252,7 @@ function init() {
     }, 1000);
 
     // load old task data
-    const savedTasks = datastore.get(TASK_SAVE_KEY, {});
+    const savedTasks = datastore.get(taskSaveKey, {});
 
     // generate the task rows
     forInterval(0, 23, 1, 50, index => {
