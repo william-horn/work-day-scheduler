@@ -41,6 +41,12 @@ Coming soon
 ==================================================================================================================================
 */
 
+/* ------------------- */
+/* Import My Libraries */
+/* ------------------- */
+import PseudoEvent from "./libs/pseudo-events-2.0.0.js";
+import datastore from "./libs/datastore-1.0.0.js";
+
 /* ------------------------- */
 /* Global Element References */
 /* ------------------------- */
@@ -53,9 +59,25 @@ const currentDateTag = $("#current-date");
 // global hash map of task row metadata
 const rowTable = new Map();
 
+// global time event that fires every second
+const globalTimeEvent = new PseudoEvent();
+
+// datastore namespace
+const TASK_SAVE_KEY = "saved-tasks";
+
 /* ----------------- */
 /* Utility Functions */
 /* ----------------- */
+
+// function that returns a 'new Date()' ONLY for a given hour.
+// this function was just created as a debugging tool to simulate different hours of the day
+function getFakeDateFromHour(setHour) {
+    return () => {
+        const fakeDate = new Date();
+        fakeDate.setHours(setHour === undefined ? fakeDate.getHours() : setHour);
+        return fakeDate;
+    }
+}
 
 // generate mathematical sequence of {12, 1, 2, ..., 12, 1, 2, ...}
 function getClockHour(index) {
@@ -175,7 +197,48 @@ function onSaveButtonClicked(event) {
     }
 }
 
+// clock heartbeat
+function clockTick(currentTime) {
+    const localHour = currentTime.getHours();
+    const localSec = currentTime.getSeconds();
+    const localMin = currentTime.getMinutes();
+    const isNewDay = localHour === 0
+        && localSec === 0
+        && localMin === 0;
+
+    // update local time display in header
+    $(currentDateTag).text(currentTime.toLocaleString());
+
+    // if local time is 00:00:00 (12am), reset yesterday's data
+    if (isNewDay) resetSavedTaskInfo();
+}
+
 function init() {
+    // 'debugDate' is for debugging purposes only. call 'getFakeDateFromHour(set_hour)' to
+    // simulate your local time at a custom hour.
+    let debugDate = getFakeDateFromHour(); // this line is optional and can be removed, but you must change code below
+
+    // without debugDate, 'loadTime' should just be 'new Date()'
+    const loadTime = debugDate();
+    clockTick(loadTime);
+
+    // for debugging purposes, watch the hours go by in seconds
+    // forInterval(1, 500, 1, 1000, index => {
+    //     debugDate = getFakeDateFromHour(index);
+    // })
+
+    // connect pseudo-events
+    globalTimeEvent.strongConnect(clockTick);
+
+    // set heartbeat interval for clock update
+    setInterval(() => {
+        const time = debugDate(); // without 'debugDate', this should just be 'new Date()'
+        globalTimeEvent.fire(time)
+    }, 1000);
+
+    // load old task data
+    const savedTasks = datastore.get(TASK_SAVE_KEY, {});
+    
     // generate the task rows
     forInterval(0, 23, 1, 50, index => {
         const rowDiv = createTaskRow(index, loadTime, savedTasks);
